@@ -1,0 +1,36 @@
+name: Build and test
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: API tests
+        run: mvn -B -f backend/pom.xml test
+      - name: Install UI dependencies
+        run: npm ci --prefix frontend
+      - name: Frontend build
+        run: npm run build --prefix frontend
+      - name: Install browser
+        run: cd frontend && npx playwright install --with-deps chromium
+      - name: Browser workflow tests
+        run: npm run test:e2e --prefix frontend
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-report
+          path: frontend/playwright-report/
