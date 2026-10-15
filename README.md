@@ -135,3 +135,7 @@ See [API reference](docs/API.md) and [database design](docs/DATABASE.md).
 ## Deployment notes
 
 Use HTTPS at your reverse proxy and set `SECURE_COOKIES=true` in production. Keep frontend and API on the same origin, or configure the exact `FRONTEND_ORIGIN`; never use a wildcard with authenticated requests. Store credentials in environment/secrets, not git. Public tracking IDs are bearer references, so share them only with intended recipients. Add reverse-proxy rate limiting before exposing tracking and login to the internet. This project does not include SMS, GPS/live driver maps, payments, file attachments, password reset, or multi-instance mail coordination.
+
+## JFLAP + JDBC + MySQL rebuild
+
+See [the Java console rebuild](jdbc-jflap/README.md) for a standalone application whose delivery transitions are driven by an actual JFLAP `.jff` automaton and persisted with plain JDBC in a separate MySQL database.
