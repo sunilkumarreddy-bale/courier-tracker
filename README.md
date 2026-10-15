@@ -1,3 +1,15 @@
+# Courier Parcel Tracking — Java Swing + JDBC + MySQL
+
+The standalone desktop application is in **[jdbc-desktop/](jdbc-desktop/README.md)**. It uses Java 17, Swing, prepared JDBC statements, and MySQL — no Spring Boot or React required.
+
+Includes administrator/agent login, parcel registration, public tracking, assignments, enforced status history, in-app notifications, search/filtering, pagination, and dashboard totals.
+
+See **[setup and run instructions](jdbc-desktop/README.md)**.
+
+---
+
+## Original web application (preserved)
+
 # Courier Tracker
 
 A full-stack **Courier Parcel Tracking and Delivery Management** application built with **Java 17, Spring Boot, React, and MySQL**. Includes a persistent H2 option for an easy local demo.

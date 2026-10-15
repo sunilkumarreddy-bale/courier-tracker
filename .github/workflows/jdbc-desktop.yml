@@ -1,0 +1,36 @@
+name: JDBC desktop
+on: [push, pull_request]
+jobs:
+  jdbc:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: test-root-password
+          MYSQL_DATABASE: courier_jdbc_test
+          MYSQL_USER: courier
+          MYSQL_PASSWORD: test-courier-password
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s --health-timeout=5s --health-retries=12
+    defaults:
+      run:
+        working-directory: jdbc-desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - run: mvn -B package test-compile dependency:copy-dependencies -DincludeScope=test
+      - name: H2 integration checks
+        run: java -cp 'target/classes:target/test-classes:target/dependency/*' courier.StoreSmokeTest
+      - name: MySQL integration checks
+        env:
+          TEST_DB_URL: jdbc:mysql://localhost:3306/courier_jdbc_test?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true
+          TEST_DB_USERNAME: courier
+          TEST_DB_PASSWORD: test-courier-password
+        run: java -cp 'target/classes:target/test-classes:target/dependency/*' courier.StoreSmokeTest
