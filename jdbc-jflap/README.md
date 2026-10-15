@@ -1,6 +1,6 @@
 # Courier Tracker — JFLAP + JDBC + MySQL
 
-An independent Java 17 console rebuild in this repository. JFLAP models the delivery automaton; Java loads that exact `.jff` file to enforce status changes; JDBC prepared statements persist data in MySQL. Run commands from `jdbc-jflap/`. The existing web application remains available separately.
+An independent Java 17 desktop and console rebuild in this repository. JFLAP models the delivery automaton; Java loads that exact `.jff` file to enforce status changes; JDBC prepared statements persist data in MySQL. Run commands from `jdbc-jflap/`. The existing web application remains available separately.
 
 ## Start
 
@@ -82,7 +82,7 @@ Assignment and access permissions are application rules, not symbols in this DFA
 
 Parcel registration, assignment and updates use transactions. Updates lock the parcel with `SELECT ... FOR UPDATE`, then validate its current state, agent ownership and event before committing status, history and notification together. Errors roll back the transaction. Prepared statements bind user input. The schema uses InnoDB, unique tracking/email keys and indexes. XML external entities and DOCTYPE are disabled.
 
-This is a console project, not a replacement React UI. Its dashboard provides status counts; SMTP/email delivery, phone/email contact fields, rich web dialogs and overdue metrics from the original are not implemented. Database credentials are trusted application credentials; direct SQL access can bypass application permissions. History has no edit/delete operation in the application.
+This provides Swing desktop and console interfaces. Its dashboard provides status counts; SMTP/email delivery, phone/email contact fields, rich web dialogs and overdue metrics from the original are not implemented. Database credentials are trusted application credentials; direct SQL access can bypass application permissions. History has no edit/delete operation in the application.
 
 ## Verification
 
@@ -94,3 +94,21 @@ java -cp 'target/test-classes:target/classes:target/dependency/*' com.courier.jd
 ```
 
 The database check needs an empty schema and tests bootstrap, login, agent isolation, assignment requirements, admin-only cancellation, failure/retry, terminal-state protection, tracking and inbox queries. A second run needs a new empty test database because first-admin bootstrap is intentionally single-use. GitHub Actions supplies a fresh MySQL 8.4 service and runs these checks. Local execution requires the tools listed above.
+
+## Swing GUI
+
+After database initialization and administrator bootstrap, run:
+
+```bash
+mvn compile exec:java -Dexec.mainClass=com.courier.jdbc.Gui
+# Or, after building and copying dependencies:
+java -cp 'target/classes:target/dependency/*' com.courier.jdbc.Gui
+```
+
+The desktop UI provides a searchable parcel table and forms for login, registration, assignment, status updates, agents and public tracking. Dashboard and notification queries appear in the activity area. JDBC work runs off the Swing event thread.
+
+Generate a database-free visual preview from the actual Swing components (sample data is labelled):
+
+```bash
+java -cp target/classes com.courier.jdbc.Gui --preview gui-preview.png
+```

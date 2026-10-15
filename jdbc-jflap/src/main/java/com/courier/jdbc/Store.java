@@ -8,6 +8,7 @@ final class Store implements AutoCloseable {
  record User(long id,String name,String role) {}
  private final Connection db;
  private final Workflow workflow;
+ java.util.function.Consumer<String> output=System.out::print;
  Store(Workflow w)throws Exception {
   workflow=w;
   String url=System.getenv().getOrDefault("DB_URL","jdbc:mysql://localhost:3306/courier_jflap?connectionTimeZone=UTC");
@@ -111,8 +112,8 @@ final class Store implements AutoCloseable {
  void read(User u,long id)throws SQLException{execute("UPDATE notifications SET is_read=TRUE WHERE id=? AND user_id=?",id,u.id());}
  private void print(String sql,Object...args)throws SQLException {
   try(var q=db.prepareStatement(sql)){bind(q,args);try(var r=q.executeQuery()){
-   var m=r.getMetaData();for(int i=1;i<=m.getColumnCount();i++)System.out.print(m.getColumnLabel(i)+" | ");System.out.println();
-   int count=0;while(r.next()){count++;for(int i=1;i<=m.getColumnCount();i++)System.out.print(r.getString(i)+" | ");System.out.println();}if(count==0)System.out.println("No records.");
+   var m=r.getMetaData();for(int i=1;i<=m.getColumnCount();i++)output.accept(m.getColumnLabel(i)+" | ");output.accept("\n");
+   int count=0;while(r.next()){count++;for(int i=1;i<=m.getColumnCount();i++)output.accept(r.getString(i)+" | ");output.accept("\n");}if(count==0)output.accept("No records.\n");
   }}
  }
  public void close()throws SQLException{db.close();}

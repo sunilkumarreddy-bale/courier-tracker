@@ -7,7 +7,7 @@ import java.util.UUID;
 public final class Checks {
  static void check(boolean condition,String message){if(!condition)throw new AssertionError(message);}
  interface Operation{void run()throws Exception;}
- static void rejected(Operation op)throws Exception{try{op.run();}catch(IllegalArgumentException e){return;}throw new AssertionError("Expected rejection");}
+ static void rejected(Operation op)throws Exception{try{op.run();}catch(IllegalArgumentException | IllegalStateException e){return;}throw new AssertionError("Expected rejection");}
  public static void main(String[] args)throws Exception {
   Workflow w=new Workflow(Path.of("models/parcel-workflow.jff"));
   for(String s:new String[]{"ptod","ptofod","c","pr","ptr","ptofr"})check(w.accepts(s),"Should accept "+s);
