@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='utf-8'?>
+<structure>
+  <type>fa</type>
+  <automaton>
+    <state id="0" name="REGISTERED">
+      <x>100</x>
+      <y>100</y>
+      <initial />
+    </state>
+    <state id="1" name="PICKED_UP">
+      <x>330</x>
+      <y>100</y>
+    </state>
+    <state id="2" name="IN_TRANSIT">
+      <x>560</x>
+      <y>100</y>
+    </state>
+    <state id="3" name="OUT_FOR_DELIVERY">
+      <x>790</x>
+      <y>100</y>
+    </state>
+    <state id="4" name="DELIVERED">
+      <x>100</x>
+      <y>320</y>
+      <final />
+    </state>
+    <state id="5" name="DELIVERY_FAILED">
+      <x>330</x>
+      <y>320</y>
+    </state>
+    <state id="6" name="RETURNED">
+      <x>560</x>
+      <y>320</y>
+      <final />
+    </state>
+    <state id="7" name="CANCELLED">
+      <x>790</x>
+      <y>320</y>
+      <final />
+    </state>
+    <transition>
+      <from>0</from>
+      <to>1</to>
+      <read>p</read>
+    </transition>
+    <transition>
+      <from>0</from>
+      <to>7</to>
+      <read>c</read>
+    </transition>
+    <transition>
+      <from>1</from>
+      <to>2</to>
+      <read>t</read>
+    </transition>
+    <transition>
+      <from>1</from>
+      <to>6</to>
+      <read>r</read>
+    </transition>
+    <transition>
+      <from>2</from>
+      <to>3</to>
+      <read>o</read>
+    </transition>
+    <transition>
+      <from>2</from>
+      <to>6</to>
+      <read>r</read>
+    </transition>
+    <transition>
+      <from>3</from>
+      <to>4</to>
+      <read>d</read>
+    </transition>
+    <transition>
+      <from>3</from>
+      <to>5</to>
+      <read>f</read>
+    </transition>
+    <transition>
+      <from>5</from>
+      <to>3</to>
+      <read>o</read>
+    </transition>
+    <transition>
+      <from>5</from>
+      <to>6</to>
+      <read>r</read>
+    </transition>
+  </automaton>
+</structure>
